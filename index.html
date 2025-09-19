@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Emulator - ZIP Upload</title>
+  <style>
+    body { font-family: sans-serif; background: #222; color: #eee; }
+    .container { max-width: 500px; margin: 2em auto; padding: 2em; background: #333; border-radius: 8px; }
+    input[type="file"] { margin: 1em 0; }
+    #output { margin-top: 1em; white-space: pre-wrap; background: #222; padding: 1em; border-radius: 4px; }
+    button { padding: 0.5em 1em; margin-top: 1em;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>JS Emulator ZIP Loader</h1>
+    <input type="file" id="zipfile" accept=".zip">
+    <button onclick="handleZip()">Upload & List ZIP Contents</button>
+    <div id="output"></div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script>
+    async function handleZip() {
+      const fileInput = document.getElementById('zipfile');
+      const output = document.getElementById('output');
+      if (!fileInput.files.length) {
+        output.textContent = "Please select a ZIP file.";
+        return;
+      }
+      const file = fileInput.files[0];
+      const zip = new JSZip();
+      try {
+        const zipData = await zip.loadAsync(file);
+        let list = "ZIP contents:\n";
+        Object.keys(zipData.files).forEach(name => {
+          list += "- " + name + "\n";
+        });
+        output.textContent = list + "\n\nTo play games, you’ll need to integrate a JS emulator for the specific game type.";
+      } catch (e) {
+        output.textContent = "Error loading ZIP: " + e;
+      }
+    }
+  </script>
+</body>
+</html>
